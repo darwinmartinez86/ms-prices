@@ -17,9 +17,9 @@ import org.springframework.stereotype.Service;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.Optional;
 
 
 @Service
@@ -57,12 +57,12 @@ public class PricesServiceImpl implements PricesService {
   private PricesEntity getPriceEntity(LocalDateTime consultationDate, Long brandId, Long productId) {
 
     Specification<PricesEntity> spec = PricesSpecification.findPriceByCriteria(consultationDate,brandId,productId);
-    Optional<PricesEntity> pricesEntity = pricesRepository.findOne(spec);
+    List<PricesEntity> pricesEntity = pricesRepository.findAll(spec);
 
     if(pricesEntity.isEmpty()) {
       getPricesNotFoundException(productId.toString(), consultationDate.format(formatter));
     }
-    return pricesEntity.get();
+    return pricesEntity.get(0);
   }
 
   private void getPricesNotFoundException(String productId, String consultationDate) {
